@@ -15,4 +15,9 @@ outputs:
 - name: app-manifest-output
 
 run:
-  path: blue-green-deployment-pipeline/tasks/app-manifest-prep
+  path: sh
+  args:
+  - -exc
+  - |
+    chmod +x blue-green-deployment-pipeline/tasks/app-manifest-prep
+    sh blue-green-deployment-pipeline/tasks/app-manifest-prep

@@ -13,4 +13,9 @@ inputs:
 - name: current-app-info
 
 run:
-  path: blue-green-deployment-pipeline/tasks/update-routes
+  path: sh
+  args:
+  - -exc
+  - |
+    chmod +x blue-green-deployment-pipeline/tasks/update-routes
+    sh blue-green-deployment-pipeline/tasks/update-routes
