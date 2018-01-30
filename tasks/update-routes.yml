@@ -9,8 +9,8 @@ image_resource:
 
 
 inputs:
-- name: concourse-pipeline-samples
+- name: blue-green-deployment-pipeline
 - name: current-app-info
 
 run:
-  path: concourse-pipeline-samples/blue-green-app-deployment/ci/tasks/update-routes
+  path: blue-green-deployment-pipeline/tasks/update-routes

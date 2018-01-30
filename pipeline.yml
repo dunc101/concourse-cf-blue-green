@@ -4,17 +4,47 @@ groups:
   - deploy-app
   #- load-tests
   #- promote-new-version
-
+  
+resource_types:
+- name: maven-resource
+  type: docker-image
+  source:
+    repository: pivotalpa/maven-resource
+    tag: latest
+    
+resources:
+- name: blue-green-deployment-pipeline
+  type: git
+  source:
+    uri: https://github.com/dunc101/concourse-cf-blue-green.git
+    
+- name: resource-deploy-blue-green
+  type: cf
+  source:
+    api: {{pws-api}}
+    organization: {{pws-organization}}
+    username: {{deploy-username}}
+    password: {{deploy-password}}
+    skip_cert_check: true
+    space: {{pws-space}}
+    
+# nexus repo for SNAPSHOTS. 
+- name: artifact
+  type: maven-resource
+  source:
+    url: http://maven01.ipacc.com:8081/nexus/content/repositories/infinity-releases
+    artifact: ((nexus-artifact-name))
+    username: ((nexus-username))
+    password: ((nexus-password))
+    
+jobs:
 - name: deploy-app
   serial: true
   public: true
   plan:
-  - get: concourse-pipeline-samples
-    trigger: true
-    passed:
-      - unit-tests
+  - get: blue-green-deployment-pipeline
   - task: get-current-app-color
-    file: ci/tasks/current-app-get-info.yml
+    file: blue-green-deployment-pipeline/tasks/current-app-get-info.yml
     params:
       PWS_APP_SUFFIX: {{pws-app-suffix}}
       PWS_API: {{pws-api}}
@@ -23,13 +53,14 @@ groups:
       PWS_PWD: {{deploy-password}}
       PWS_SPACE: {{pws-space}}
   - task: prepare-app-manifest
-    file: ci/tasks/app-manifest-prep.yml
+    file: blue-green-deployment-pipeline/tasks/app-manifest-prep.yml
     params:
       PWS_APP_SUFFIX: {{pws-app-suffix}}
-  - put: PWS
+  - get: artifact
+  - put: resource-deploy-blue-green
     params:
       manifest: app-manifest-output/manifest.yml
-      path: concourse-pipeline-samples/blue-green-app-deployment/bgd-app
+      path: artifact/*.jar
 
 #- name: load-tests
 #  serial: true
