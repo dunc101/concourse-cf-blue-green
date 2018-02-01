@@ -2,11 +2,15 @@
 
 set -e
 
+POM_DIRECTORY=$1
+
 echo "Verifying deployment ..."
 
 export NEXT_APP_COLOR=$(cat ./current-app-info/next-app.txt)
 export NEXT_APP_URL=http://$NEXT_APP_COLOR-$PWS_APP_SUFFIX.$PWS_APP_DOMAIN/
 
-echo "Performing deployment smoke tests!"
+echo "Performing deployment smoke tests against url $NEXT_APP_URL!"
 
+# Switch to the directory with the pom.xml file
+cd $POM_DIRECTORY
 mvn test -DserverUrl=$NEXT_APP_URL
