@@ -7,7 +7,7 @@ POM_DIRECTORY=$1
 echo "Verifying deployment ..."
 
 export NEXT_APP_COLOR=$(cat ./current-app-info/next-app.txt)
-export NEXT_APP_URL=http://$NEXT_APP_COLOR-$PWS_APP_SUFFIX.$PWS_APP_DOMAIN/
+export NEXT_APP_URL=https://$NEXT_APP_COLOR-$PWS_APP_SUFFIX.$PWS_APP_DOMAIN/
 
 echo "Performing deployment smoke tests against url $NEXT_APP_URL!"
 
