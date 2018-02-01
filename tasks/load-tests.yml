@@ -14,5 +14,5 @@ run:
   - -exc
   - |
     chmod +x blue-green-deployment-pipeline/tasks/load-tests
-    sh blue-green-deployment-pipeline/tasks/load-tests
+    sh blue-green-deployment-pipeline/tasks/load-tests "resource-smoke-tests"
   
